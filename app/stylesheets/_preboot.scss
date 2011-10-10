@@ -1,0 +1,281 @@
+/* Preboot.scss
+ * Variables and mixins to pre-ignite any new web development project
+ * ------------------------------------------------------------------ */
+
+
+// VARIABLES
+// ---------
+
+// Links
+$link_color:         #0069d6;
+$link_color_hover:   darken($link_color, 10);
+
+// Grays
+$black:             #000;
+$gray_dark:         lighten($black, 25%);
+$gray:              lighten($black, 50%);
+$gray_light:        lighten($black, 75%);
+$gray_lighter:      lighten($black, 90%);
+$white:             #fff;
+
+// Accent Colors
+$blue:              #049CDB;
+$blue_dark:         #0064CD;
+$green:             #46a546;
+$red:               #9d261d;
+$yellow:            #ffc40d;
+$orange:            #f89406;
+$pink:              #c3325f;
+$purple:            #7a43b6;
+
+// Baseline grid
+$basefont:          13px;
+$baseline:          18px;
+
+// Griditude
+$grid_columns:         16;
+$grid_column_width:   40px;
+$grid_gutter_width:   20px;
+$extra_space:        ($grid_gutter_width * 2); // For our grid calculations
+$site_width:         ($grid_columns * $grid_column_width) + ($grid_gutter_width * ($grid_columns - 1));
+
+// Color Scheme
+$base_color:        $blue;                  // Set a base color
+$complement:        spin($base_color, 180);  // Determine a complementary color
+$split1:            spin($base_color, 158);  // Split complements
+$split2:            spin($base_color, -158);
+$triad1:            spin($base_color, 135);  // Triads colors
+$triad2:            spin($base_color, -135);
+$tetra1:            spin($base_color, 90);   // Tetra colors
+$tetra2:            spin($base_color, -90);
+$analog1:           spin($base_color, 22);   // Analogs colors
+$analog2:           spin($base_color, -22);
+
+
+// MIXINS
+// ------
+
+// Clearfix for clearing floats like a boss h5bp.com/q
+@mixin clearfix {
+  zoom: 1;
+  &:before, &:after {
+    display: table;
+    content: "";
+  }
+  &:after {
+    clear: both;
+  }
+}
+.clearfix{
+  @include clearfix;
+}
+
+// Center-align a block level element
+@mixin center_block {
+  display: block;
+   margin: 0 auto;
+}
+
+// Sizing shortcuts
+@mixin size($height: 5px, $width: 5px) {
+  height: $height;
+  width: $width;
+}
+@mixin square($size: 5px) {
+  @include size($size, $size);
+}
+
+// Input placeholder text
+@mixin placeholder($color: $gray_light) {
+  :-moz-placeholder {
+    color: $color;
+  }
+  ::-webkit-input-placeholder {
+    color: $color;
+  }
+}
+
+// Font Stacks
+ @mixin shorthand($weight: normal, $size: 14px, $line_height: 20px) {
+   font-size: $size;
+   font-weight: $weight;
+   line-height: $line_height;
+ }
+ @mixin sans-serif($weight: normal, $size: 14px, $line_height: 20px) {
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+   font-size: $size;
+   font-weight: $weight;
+   line-height: $line_height;
+ }
+ @mixin serif($weight: normal, $size: 14px, $line_height: 20px) {
+   font-family: "Georgia", Times New Roman, Times, serif;
+   font-size: $size;
+   font-weight: $weight;
+   line-height: $line_height;
+ }
+ @mixin monospace($weight: normal, $size: 12px, $line_height: 20px) {
+   font-family: "Monaco", Courier New, monospace;
+   font-size: $size;
+   font-weight: $weight;
+   line-height: $line_height;
+ }
+
+
+// Grid System
+.container {
+   @include clearfix();
+   width: $site_width;
+   margin: 0 auto;
+}
+@mixin columns($column_span: 1) {
+   width: ($grid_column_width * $column_span) + ($grid_gutter_width * ($column_span - 1));
+}
+@mixin offset($column_offset: 1) {
+   margin-left: ($grid_column_width * $column_offset) + ($grid_gutter_width * ($column_offset - 1)) + $extra_space;
+}
+
+// Border Radius
+@mixin border_radius($radius: 5px) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+// Drop shadows
+@mixin box_shadow($shadow: 0 1px 3px rgba(0,0,0,.25)) {
+  -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+// Transitions
+@mixin transition($transition) {
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  transition: $transition;
+}
+
+// Background clipping
+@mixin background_clip($clip) {
+  -webkit-background-clip: $clip;
+  -moz-background-clip: $clip;
+  background-clip: $clip;
+}
+
+// CSS3 Content Columns
+@mixin content_columns($column_count, $column_gap: 20px) {
+  -webkit-column-count: $column_count;
+  -moz-column-count: $column_count;
+  column-count: $column_count;
+  -webkit-column-gap: $column_gap;
+  -moz-column-gap: $column_gap;
+  column-gap: $column_gap;
+}
+
+// Add an alphatransparency value to any background or border color (via Elyse Holladay)
+#translucent {
+//    @include background($color: $white, $alpha: 1) {
+//    background-color: hsla(hue($color), saturation($color), lightness($color), $alpha);
+//  }
+//  @include border($color: $white, $alpha: 1) {
+//      border-color: hsla(hue($color), saturation($color), lightness($color), $alpha);
+//      background-clip: padding_box;
+//  }
+}
+
+// Gradient Bar Colors for buttons and allerts
+@mixin gradient_bar($primaryColor, $secondary_color) {
+//  @include gradient;
+//  @include vertical($primaryColor, $secondary_color);
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  border-color: $secondary_color $secondary_color darken($secondary_color, 15%);
+  border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+}
+// Shared colors for buttons and alerts
+.btn,
+.alert-message {
+  // Set text color
+  .danger,
+  .danger:hover,
+  .error,
+  .error:hover,
+  .success,
+  .success:hover,
+  .info,
+  .info:hover {
+    color: $white;
+  }
+  // Danger and error appear as red
+  .danger,
+  .error {
+    @include gradient_bar(#ee5f5b, #c43c35);
+  }
+  // Success appears as green
+  .success {
+    @include gradient_bar(#62c462, #57a957);
+  }
+  // Info appears as a neutral blue
+  .info {
+    @include gradient_bar(#5bc0de, #339bb9);
+  }
+}
+
+// Gradients
+
+@mixin horizontal ($start_color: #555, $end_color: #333) {
+  background-color: $end_color;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, right top, from($start_color), to($end_color)); // Konqueror
+  background-image: -moz-linear-gradient(left, $start_color, $end_color); // FF 3.6+
+  background-image: -ms-linear-gradient(left, $start_color, $end_color); // IE10
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, $start_color), color-stop(100%, $end_color)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(left, $start_color, $end_color); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(left, $start_color, $end_color); // Opera 11.10
+  background-image: linear-gradient(left, $start_color, $end_color); // Le standard
+//  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', end_colorstr='%d', GradientType=1)",$start_color,$end_color)); // IE9 and down
+}
+@mixin vertical ($start_color: #555, $end_color: #333) {
+  background-color: $end_color;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from($start_color), to($end_color)); // Konqueror
+  background-image: -moz-linear-gradient(top, $start_color, $end_color); // FF 3.6+
+  background-image: -ms-linear-gradient(top, $start_color, $end_color); // IE10
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $start_color), color-stop(100%, $end_color)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(top, $start_color, $end_color); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(top, $start_color, $end_color); // Opera 11.10
+  background-image: linear-gradient(top, $start_color, $end_color); // The standard
+//  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', end_colorstr='%d', GradientType=0)",$start_color,$end_color)); // IE9 and down
+}
+@mixin directional ($start_color: #555, $end_color: #333, $deg: 45deg) {
+  background-color: $end_color;
+  background-repeat: repeat-x;
+  background-image: -moz-linear-gradient($deg, $start_color, $end_color); // FF 3.6+
+  background-image: -ms-linear-gradient($deg, $start_color, $end_color); // IE10
+  background-image: -webkit-linear-gradient($deg, $start_color, $end_color); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient($deg, $start_color, $end_color); // Opera 11.10
+  background-image: linear-gradient($deg, $start_color, $end_color); // The standard
+}
+@mixin vertical_three_colors($start_color: #00b3ee, $mid_color: #7a43b6, $color_stop: 50%, $end_color: #c3325f) {
+  background-color: $end_color;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from($start_color), color-stop($color_stop, $mid_color), to($end_color));
+  background-image: -webkit-linear-gradient($start_color, $mid_color $color_stop, $end_color);
+  background-image: -moz-linear-gradient(top, $start_color, $mid_color $color_stop, $end_color);
+  background-image: -ms-linear-gradient($start_color, $mid_color $color_stop, $end_color);
+  background-image: -o-linear-gradient($start_color, $mid_color $color_stop, $end_color);
+  background-image: linear-gradient($start_color, $mid_color $color_stop, $end_color);
+//  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', end_colorstr='%d', GradientType=0)",$start_color,$end_color)); // IE9 and down, gets no color-stop at all for proper fallback
+}
+
+// Reset filters for IE
+@mixin reset_filter{
+//  filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
+}
+
+// Opacity
+@mixin opacity($opacity: 100) {
+//  filter: e(%("alpha(opacity=%d)", $opacity));
+  -khtml-opacity: ($opacity / 100);
+  -moz-opacity: ($opacity / 100);
+  opacity: ($opacity / 100);
+}
