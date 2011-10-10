@@ -3,13 +3,18 @@ source :rubygems
 # Project requirements
 gem 'rake'
 gem 'sinatra-flash'
-gem 'rack', '1.3.3'
+gem 'rack'
 
 # Component requirements
-gem 'sass'
 gem 'haml'
-gem 'mongo_mapper'
-gem 'bson_ext', :require => 'mongo'
+gem 'sass'
+gem 'dm-sqlite-adapter'
+gem 'dm-validations'
+gem 'dm-timestamps'
+gem 'dm-migrations'
+gem 'dm-constraints'
+gem 'dm-aggregates'
+gem 'dm-core'
 
 # Test requirements
 group :test do

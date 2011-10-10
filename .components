@@ -1,5 +1,5 @@
 ---
-:orm: mongomapper
+:orm: datamapper
 :test: minitest
 :mock: mocha
 :script: jquery
