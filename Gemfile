@@ -2,7 +2,7 @@ source :rubygems
 
 # Project requirements
 gem 'rake'
-gem 'sinatra-flash'
+gem 'sinatra-flash', :require => 'sinatra/flash'
 gem 'rack'
 
 # Component requirements
@@ -15,6 +15,11 @@ gem 'dm-migrations'
 gem 'dm-constraints'
 gem 'dm-aggregates'
 gem 'dm-core'
+
+# Crawler requirements
+gem 'nokogiri'
+gem 'resque'
+gem 'resque-loner'
 
 # Test requirements
 group :test do
