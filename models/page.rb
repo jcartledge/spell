@@ -30,10 +30,11 @@ class Page
   has n, :incoming_links, self, :through => :_incoming_links, :via => :source
 
   def links_to page
-    link = self.class::Link.create
-    link.source = self
-    link.target = page
-    link.save
+    self.class::Link.first_or_create(:source => self, :target => page).save
+  end
+
+  def is_linked_from page
+    self.class::Link.first_or_create(:source => page, :target => self).save
   end
 
 end
