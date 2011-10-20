@@ -33,4 +33,5 @@ gem 'padrino', '0.10.3'
 
 group :development do
   gem 'thin'
+  gem 'wirble'
 end

@@ -4,9 +4,10 @@ class Page
 
     include DataMapper::Resource
 
-    storage_names[:default] = 'links'
-    belongs_to :outgoing, 'Page', :key => true
-    belongs_to :incoming, 'Page', :key => true
+    storage_names[:default] = 'page_links'
+
+    belongs_to :source, 'Page', :key => true
+    belongs_to :target, 'Page', :key => true
 
     property :id, Serial
 
@@ -22,26 +23,10 @@ class Page
   property :created_at, DateTime
   property :updated_at, DateTime
 
-  has n, :outgoing_links, 'Page::Link',
-    :child_key => [:outgoing_host, :outgoing_path]
+  has n, :outgoing_links, 'Page::Link', :child_key => [:target_host, :target_path]
+  has n, :outgoing_pages, self, :through => :outgoing_links, :via => :target
 
-  has n, :incoming_links, 'Page::Link',
-    :child_key => [:incoming_host, :incoming_path]
-
-  has n, :outgoing_pages, self, :through => :outgoing_links, :via => :outgoing
-  has n, :incoming_pages, self, :through => :incoming_links, :via => :incoming
-
-  def add_link(*pages)
-    outgoing_pages.concat(pages)
-    pages.each { |page| page.add_incoming(self) }
-    save
-    self
-  end
-
-  def add_incoming(*pages)
-    incoming_pages.concat(pages)
-    save
-    self
-  end
+  has n, :incoming_links, 'Page::Link', :child_key => [:source_host, :source_path]
+  has n, :incoming_pages, self, :through => :incoming_links, :via => :source
 
 end
