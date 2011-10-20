@@ -6,36 +6,89 @@ describe "Page Model" do
     Page.destroy!
     Page::Link.destroy!
 
-    @p1 = Page.create(:host => 'p', :path => '1')
-    @p1.save
-
-    @p2 = Page.create(:host => 'p', :path => '2')
-    @p2.save
+    @pages = []
+    (0..9).each do |path|
+      page = Page.create(:host => 'p', :path => path)
+      page.save
+      @pages.push page
+    end
   end
 
   it 'can construct a new instance' do
-    @page = Page.new
-    refute_nil @page
+    page = Page.new
+    refute_nil page
   end
 
   it 'can have incoming links' do
-    @p1.is_linked_from @p2
+    @pages[0].is_linked_from! @pages[1]
 
-    @p1.incoming_links.must_include @p2
-    @p1.outgoing_links.wont_include @p2
+    (@pages[0].is_linked_from? @pages[1]).must_equal true
+    (@pages[1].links_to? @pages[0]).must_equal true
 
-    @p2.outgoing_links.must_include @p1
-    @p2.incoming_links.wont_include @p1
+    (@pages[1].is_linked_from? @pages[0]).wont_equal true
+    (@pages[0].links_to? @pages[1]).wont_equal true
   end
 
   it 'can have outgoing links' do
-    @p1.links_to @p2
+    @pages[0].links_to! @pages[1]
 
-    @p1.outgoing_links.must_include @p2
-    @p1.incoming_links.wont_include @p2
+    (@pages[0].links_to? @pages[1]).must_equal true
+    (@pages[1].is_linked_from? @pages[0]).must_equal true
+    (@pages[1].links_to? @pages[0]).wont_equal true
+    (@pages[0].is_linked_from?@pages[1]).wont_equal true
+  end
 
-    @p2.incoming_links.must_include @p1
-    @p2.outgoing_links.wont_include @p1
+  it 'allows incoming links to be deleted' do
+    @pages[0].is_linked_from! @pages[1]
+    @pages[0].is_not_linked_from! @pages[1]
+    (@pages[0].is_linked_from? @pages[1]).wont_equal true
+    (@pages[1].links_to? @pages[0]).wont_equal true
+  end
+
+  it 'allows outgoing links to be deleted' do
+    @pages[0].links_to! @pages[1]
+    @pages[0].does_not_link_to! @pages[1]
+    (@pages[0].does_not_link_to? @pages[1]).must_equal true
+    (@pages[1].is_not_linked_from? @pages[0]).must_equal true
+  end
+
+  it 'allows linking to be chained' do
+    (@pages[0].links_to! @pages[1]).must_equal @pages[0]
+    (@pages[1].is_linked_from! @pages[0]).must_equal @pages[1]
+    (@pages[0].does_not_link_to! @pages[1]).must_equal @pages[0]
+    (@pages[1].is_not_linked_from! @pages[0]).must_equal @pages[1]
+  end
+
+  it 'allows all outbound links to be destroyed' do
+    @pages[0].links_to! @pages[1]
+    @pages[0].outbound_links = nil
+    (@pages[0].does_not_link_to? @pages[1]).must_equal true
+    (@pages[1].is_not_linked_from? @pages[0]).must_equal true
+  end
+
+  it 'allows all incoming links to be destroyed' do
+    @pages[0].links_to! @pages[1]
+    @pages[1].inbound_links = nil
+    (@pages[0].does_not_link_to? @pages[1]).must_equal true
+    (@pages[1].is_not_linked_from? @pages[0]).must_equal true
+  end
+
+  it 'allows all outbound links to be replaced' do
+    @pages[0].links_to! @pages[1]
+    @pages[0].outbound_links = [@pages[2], @pages[3]]
+    (@pages[0].does_not_link_to? @pages[1]).must_equal true
+    (@pages[0].links_to? @pages[2]).must_equal true
+    (@pages[0].links_to? @pages[3]).must_equal true
+    (@pages[3].is_linked_from? @pages[0]).must_equal true
+  end
+
+  it 'allows all inbound links to be replaced' do
+    @pages[0].is_linked_from! @pages[1]
+    @pages[0].inbound_links = [@pages[2], @pages[3]]
+    (@pages[0].is_not_linked_from? @pages[1]).must_equal true
+    (@pages[0].is_linked_from? @pages[2]).must_equal true
+    (@pages[0].is_linked_from? @pages[3]).must_equal true
+    (@pages[3].links_to? @pages[0]).must_equal true
   end
 
 end
