@@ -22,73 +22,78 @@ describe "Page Model" do
   it 'can have incoming links' do
     @pages[0].is_linked_from! @pages[1]
 
-    (@pages[0].is_linked_from? @pages[1]).must_equal true
-    (@pages[1].links_to? @pages[0]).must_equal true
-
-    (@pages[1].is_linked_from? @pages[0]).wont_equal true
-    (@pages[0].links_to? @pages[1]).wont_equal true
+    true.must_equal @pages[0].is_linked_from? @pages[1]
+    true.must_equal @pages[1].links_to? @pages[0]
+    true.wont_equal @pages[1].is_linked_from? @pages[0]
+    true.wont_equal @pages[0].links_to? @pages[1]
   end
 
   it 'can have outgoing links' do
     @pages[0].links_to! @pages[1]
 
-    (@pages[0].links_to? @pages[1]).must_equal true
-    (@pages[1].is_linked_from? @pages[0]).must_equal true
-    (@pages[1].links_to? @pages[0]).wont_equal true
-    (@pages[0].is_linked_from?@pages[1]).wont_equal true
+    true.must_equal @pages[0].links_to? @pages[1]
+    true.must_equal @pages[1].is_linked_from? @pages[0]
+    true.wont_equal @pages[1].links_to? @pages[0]
+    true.wont_equal @pages[0].is_linked_from?@pages[1]
   end
 
   it 'allows incoming links to be deleted' do
     @pages[0].is_linked_from! @pages[1]
     @pages[0].is_not_linked_from! @pages[1]
-    (@pages[0].is_linked_from? @pages[1]).wont_equal true
-    (@pages[1].links_to? @pages[0]).wont_equal true
+
+    true.wont_equal @pages[0].is_linked_from? @pages[1]
+    true.wont_equal @pages[1].links_to? @pages[0]
   end
 
   it 'allows outgoing links to be deleted' do
     @pages[0].links_to! @pages[1]
     @pages[0].does_not_link_to! @pages[1]
-    (@pages[0].does_not_link_to? @pages[1]).must_equal true
-    (@pages[1].is_not_linked_from? @pages[0]).must_equal true
+
+    true.must_equal @pages[0].does_not_link_to? @pages[1]
+    true.must_equal @pages[1].is_not_linked_from? @pages[0]
   end
 
   it 'allows linking to be chained' do
-    (@pages[0].links_to! @pages[1]).must_equal @pages[0]
-    (@pages[1].is_linked_from! @pages[0]).must_equal @pages[1]
-    (@pages[0].does_not_link_to! @pages[1]).must_equal @pages[0]
-    (@pages[1].is_not_linked_from! @pages[0]).must_equal @pages[1]
+    @pages[0].must_equal @pages[0].links_to! @pages[1]
+    @pages[1].must_equal @pages[1].is_linked_from! @pages[0]
+    @pages[0].must_equal @pages[0].does_not_link_to! @pages[1]
+    @pages[1].must_equal @pages[1].is_not_linked_from! @pages[0]
   end
 
   it 'allows all outbound links to be destroyed' do
     @pages[0].links_to! @pages[1]
     @pages[0].outbound_links = nil
-    (@pages[0].does_not_link_to? @pages[1]).must_equal true
-    (@pages[1].is_not_linked_from? @pages[0]).must_equal true
+
+    true.must_equal @pages[0].does_not_link_to? @pages[1]
+    true.must_equal @pages[1].is_not_linked_from? @pages[0]
   end
 
   it 'allows all incoming links to be destroyed' do
     @pages[0].links_to! @pages[1]
     @pages[1].inbound_links = nil
-    (@pages[0].does_not_link_to? @pages[1]).must_equal true
-    (@pages[1].is_not_linked_from? @pages[0]).must_equal true
+
+    true.must_equal @pages[0].does_not_link_to? @pages[1]
+    true.must_equal @pages[1].is_not_linked_from? @pages[0]
   end
 
   it 'allows all outbound links to be replaced' do
     @pages[0].links_to! @pages[1]
     @pages[0].outbound_links = [@pages[2], @pages[3]]
-    (@pages[0].does_not_link_to? @pages[1]).must_equal true
-    (@pages[0].links_to? @pages[2]).must_equal true
-    (@pages[0].links_to? @pages[3]).must_equal true
-    (@pages[3].is_linked_from? @pages[0]).must_equal true
+
+    true.must_equal @pages[0].does_not_link_to? @pages[1]
+    true.must_equal @pages[0].links_to? @pages[2]
+    true.must_equal @pages[0].links_to? @pages[3]
+    true.must_equal @pages[3].is_linked_from? @pages[0]
   end
 
   it 'allows all inbound links to be replaced' do
     @pages[0].is_linked_from! @pages[1]
     @pages[0].inbound_links = [@pages[2], @pages[3]]
-    (@pages[0].is_not_linked_from? @pages[1]).must_equal true
-    (@pages[0].is_linked_from? @pages[2]).must_equal true
-    (@pages[0].is_linked_from? @pages[3]).must_equal true
-    (@pages[3].links_to? @pages[0]).must_equal true
+
+    true.must_equal @pages[0].is_not_linked_from? @pages[1]
+    true.must_equal @pages[0].is_linked_from? @pages[2]
+    true.must_equal @pages[0].is_linked_from? @pages[3]
+    true.must_equal @pages[3].links_to? @pages[0]
   end
 
 end
