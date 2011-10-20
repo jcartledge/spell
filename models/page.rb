@@ -23,10 +23,17 @@ class Page
   property :created_at, DateTime
   property :updated_at, DateTime
 
-  has n, :outgoing_links, 'Page::Link', :child_key => [:target_host, :target_path]
-  has n, :outgoing_pages, self, :through => :outgoing_links, :via => :target
+  has n, :_outgoing_links, 'Page::Link', :child_key => [:source_host, :source_path]
+  has n, :outgoing_links, self, :through => :_outgoing_links, :via => :target
 
-  has n, :incoming_links, 'Page::Link', :child_key => [:source_host, :source_path]
-  has n, :incoming_pages, self, :through => :incoming_links, :via => :source
+  has n, :_incoming_links, 'Page::Link', :child_key => [:target_host, :target_path]
+  has n, :incoming_links, self, :through => :_incoming_links, :via => :source
+
+  def links_to page
+    link = self.class::Link.create
+    link.source = self
+    link.target = page
+    link.save
+  end
 
 end
